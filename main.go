@@ -32,19 +32,35 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	printColorBuffer(w, "@{wB}WELCOME TO GOLANG.TW")
+	colorBufferPrint(w, "\x1b[2J\x1b[1;1H")
+	colorBufferPrintln(w, "@{wB}WELCOME TO GOLANG.TW")
 	tick()
-	printColorBuffer(w, "@{r}now loading page......")
-	tock()
+
+	// show loading
+	loading_symbols := [...]string{"\\","-","|","/"}
+	colorBufferPrintln(w, "@{r}now loading page......")
+	tick()
+
+	for i := 0; i < 10; i++ {
+		index := i % len(loading_symbols)
+		str := fmt.Sprintf("%s%s", "\x1b[1F@{r}now loading page......", loading_symbols[index])
+		colorBufferPrintln(w, str);
+		tick()
+	}
 
 
 	for _, line := range lines {
 		tick()
-		printColorBuffer(w, line)
+		colorBufferPrintln(w, line)
     }
 }
 
-func printColorBuffer(w http.ResponseWriter, s string) {
+func colorBufferPrint(w http.ResponseWriter, s string) {
+	color.Fprint(w, s)
+	w.(http.Flusher).Flush()
+}
+
+func colorBufferPrintln(w http.ResponseWriter, s string) {
 	color.Fprintln(w, s)
 	w.(http.Flusher).Flush()
 }
