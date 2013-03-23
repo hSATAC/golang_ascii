@@ -7,6 +7,7 @@ import (
 	"time"
 	"strings"
 	"io/ioutil"
+	"github.com/wsxiaoys/terminal/color"
 )
 
 func readAscii() []string {
@@ -28,21 +29,34 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Try `curl ascii.golang.tw`")
 		for _, line := range lines {
 			fmt.Fprintln(w, line)
-		}	
+		}
 		return
 	}
-	fmt.Fprintln(w, "\x1b[4m\x1b[5m\x1b[44mWELCOME TO GOLANG.TW\x1b[0m")
-	fmt.Fprintln(w, "\x1b[5m\x1b[32mnow loading page......\x1b[0m\n")
-	w.(http.Flusher).Flush()
-	time.Sleep(2*time.Second)
+	printColorBuffer(w, "@{wB}WELCOME TO GOLANG.TW")
+	tick()
+	printColorBuffer(w, "@{r}now loading page......")
+	tock()
 
 
 	for _, line := range lines {
-		time.Sleep(200 * time.Millisecond)
-		fmt.Fprintln(w, line)
-		w.(http.Flusher).Flush()
+		tick()
+		printColorBuffer(w, line)
     }
 }
+
+func printColorBuffer(w http.ResponseWriter, s string) {
+	color.Fprintln(w, s)
+	w.(http.Flusher).Flush()
+}
+
+func tick() {
+	time.Sleep(200 * time.Millisecond)
+}
+
+func tock() {
+	time.Sleep(2 * time.Second)
+}
+
 func main() {
 	http.HandleFunc("/", welcome)
 	err := http.ListenAndServe(":9090", nil)
