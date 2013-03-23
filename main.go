@@ -10,7 +10,7 @@ import (
 	"github.com/wsxiaoys/terminal/color"
 )
 
-func readAscii() []string {
+func readAsciiLines() []string {
 	content, err := ioutil.ReadFile("golang.txt")
 	if err != nil {
 		fmt.Println("Error: %s\n", err)
@@ -23,15 +23,14 @@ func readAscii() []string {
 
 func welcome(w http.ResponseWriter, r *http.Request) {
 
-	lines := readAscii()
-
 	if !strings.Contains(r.UserAgent(), "curl") {
-		fmt.Fprintln(w, "Try `curl ascii.golang.tw`")
-		for _, line := range lines {
-			fmt.Fprintln(w, line)
-		}
+		html, _ := ioutil.ReadFile("golang.html")
+		fmt.Fprintf(w, string(html))
 		return
 	}
+
+	lines := readAsciiLines()
+
 	colorBufferPrintln(w, "\x1b[2J\x1b[1;1H")
 	colorBufferPrintln(w, "\x1b[1F@{wB}WELCOME TO GOLANG.TW")
 	tick()
