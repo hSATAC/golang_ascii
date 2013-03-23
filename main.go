@@ -69,10 +69,6 @@ func tick() {
 	time.Sleep(200 * time.Millisecond)
 }
 
-func tock() {
-	time.Sleep(2 * time.Second)
-}
-
 func main() {
 	http.HandleFunc("/", welcome)
 	err := http.ListenAndServe(":9090", nil)
