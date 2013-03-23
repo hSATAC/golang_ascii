@@ -32,8 +32,8 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	colorBufferPrint(w, "\x1b[2J\x1b[1;1H")
-	colorBufferPrintln(w, "@{wB}WELCOME TO GOLANG.TW")
+	colorBufferPrintln(w, "\x1b[2J\x1b[1;1H")
+	colorBufferPrintln(w, "\x1b[1F@{wB}WELCOME TO GOLANG.TW")
 	tick()
 
 	// show loading
@@ -53,11 +53,6 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 		tick()
 		colorBufferPrintln(w, line)
     }
-}
-
-func colorBufferPrint(w http.ResponseWriter, s string) {
-	color.Fprint(w, s)
-	w.(http.Flusher).Flush()
 }
 
 func colorBufferPrintln(w http.ResponseWriter, s string) {
